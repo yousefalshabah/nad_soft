@@ -10,11 +10,28 @@ export default function App() {
   const webcamRef = React.useRef(null);
   const mediaRecorderRef = React.useRef(null);
   const [capturing, setCapturing] = React.useState(false);
+  const [hasCamera, setHasCamera] = React.useState(null);
   const [recordedChunks, setRecordedChunks] = React.useState([]);
 
+  React.useEffect(() => {
+    navigator.getMedia =
+      navigator.getUserMedia || // use the proper vendor prefix
+      navigator.webkitGetUserMedia ||
+      navigator.mozGetUserMedia ||
+      navigator.msGetUserMedia;
+    navigator.getMedia(
+      { video: true },
+      function () {
+        setHasCamera(true);
+      },
+      function () {
+        setHasCamera(false);
+      }
+    );
+  });
   const handleStartCaptureClick = React.useCallback(() => {
-    console.log(webcamRef.current.stream);
-    if (webcamRef.current.stream) {
+    console.log(hasCamera);
+    if (hasCamera) {
       dispatch(start());
       setCapturing(true);
 
@@ -76,7 +93,7 @@ export default function App() {
       <div style={{ ...Styles.mainContainer }}>
         <div className="col-md-12" style={{ ...Styles.recourderContainer }}>
           <div className="col-md-12">
-            {webcamRef.current ? (
+            {hasCamera ? (
               <Webcam
                 style={{ ...Styles.playerContainer }}
                 ref={webcamRef}
@@ -84,9 +101,21 @@ export default function App() {
                 width={800}
               />
             ) : (
-              <div style={{ ...Styles.playerContainer , height:500, width:800, margin:"auto",display:"flex", flexDirection:"column", textAlign:"center", justifyContent:"center", color:"rgb(255 251 250)"}}>
+              <div
+                style={{
+                  ...Styles.playerContainer,
+                  height: 500,
+                  width: 800,
+                  margin: "auto",
+                  display: "flex",
+                  flexDirection: "column",
+                  textAlign: "center",
+                  justifyContent: "center",
+                  color: "rgb(255 251 250)",
+                }}
+              >
                 {" "}
-                <h1>device dosn`t have a camira</h1>
+                <h1>device dosn`t have a Camera</h1>
               </div>
             )}
           </div>
