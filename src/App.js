@@ -11,6 +11,7 @@ export default function App() {
   const mediaRecorderRef = React.useRef(null);
   const [capturing, setCapturing] = React.useState(false);
   const [hasCamera, setHasCamera] = React.useState(null);
+  const [deviceType, setDeviceType] = React.useState(null);
   const [recordedChunks, setRecordedChunks] = React.useState([]);
 
   React.useEffect(() => {
@@ -28,6 +29,19 @@ export default function App() {
         setHasCamera(false);
       }
     );
+    // var device = "";
+    const ua = navigator.userAgent;
+    if (/(tablet|ipad|playbook|silk)|(android(?!.*mobi))/i.test(ua)) {
+      setDeviceType("tablet");
+    } else if (
+      /Mobile|Android|iP(hone|od)|IEMobile|BlackBerry|Kindle|Silk-Accelerated|(hpw|web)OS|Opera M(obi|ini)/.test(
+        ua
+      )
+    ) {
+      setDeviceType("mobile");
+    } else {
+      setDeviceType("desktop");
+    }
   });
   const handleStartCaptureClick = React.useCallback(() => {
     dispatch(start());
@@ -90,7 +104,7 @@ export default function App() {
       <div style={{ ...Styles.mainContainer }}>
         <div className="col-md-12" style={{ ...Styles.recourderContainer }}>
           <div className="col-md-12">
-            {hasCamera ? (
+            {hasCamera || deviceType !== "desktop" ? (
               <Webcam
                 style={{ ...Styles.playerContainer }}
                 ref={webcamRef}
