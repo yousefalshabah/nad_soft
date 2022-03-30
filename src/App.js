@@ -30,7 +30,6 @@ export default function App() {
     );
   });
   const handleStartCaptureClick = React.useCallback(() => {
-    console.log(hasCamera);
     if (hasCamera) {
       dispatch(start());
       setCapturing(true);
