@@ -30,20 +30,18 @@ export default function App() {
     );
   });
   const handleStartCaptureClick = React.useCallback(() => {
-    if (hasCamera) {
-      dispatch(start());
-      setCapturing(true);
+    dispatch(start());
+    setCapturing(true);
 
-      mediaRecorderRef.current = new MediaRecorder(webcamRef.current.stream, {
-        mimeType: "video/webm",
-      });
+    mediaRecorderRef.current = new MediaRecorder(webcamRef.current.stream, {
+      mimeType: "video/webm",
+    });
 
-      mediaRecorderRef.current.addEventListener(
-        "dataavailable",
-        handleDataAvailable
-      );
-      mediaRecorderRef.current.start();
-    }
+    mediaRecorderRef.current.addEventListener(
+      "dataavailable",
+      handleDataAvailable
+    );
+    mediaRecorderRef.current.start();
   }, [webcamRef, setCapturing, mediaRecorderRef]);
 
   const handleDataAvailable = React.useCallback(
@@ -96,21 +94,14 @@ export default function App() {
               <Webcam
                 style={{ ...Styles.playerContainer }}
                 ref={webcamRef}
-                height={500}
-                width={800}
+                height={window.innerWidth > 1000 ? 500 : 265}
+                width={window.innerWidth > 1000 ? 665 : 350}
               />
             ) : (
               <div
                 style={{
                   ...Styles.playerContainer,
-                  height: 500,
-                  width: 800,
-                  margin: "auto",
-                  display: "flex",
-                  flexDirection: "column",
-                  textAlign: "center",
-                  justifyContent: "center",
-                  color: "rgb(255 251 250)",
+                  ...Styles.noCamera,
                 }}
               >
                 {" "}
@@ -118,21 +109,23 @@ export default function App() {
               </div>
             )}
           </div>
-          <div className="col-md-12">
-            {play ? (
-              <i
-                style={{ ...Styles.icon }}
-                onClick={() => handleStopCaptureClick()}
-                className="bi bi-stop-circle-fill"
-              ></i>
-            ) : (
-              <i
-                style={{ ...Styles.icon }}
-                onClick={() => handleStartCaptureClick()}
-                className="bi bi-record-circle-fill"
-              ></i>
-            )}
-          </div>
+          {hasCamera && (
+            <div className="col-md-12">
+              {play ? (
+                <i
+                  style={{ ...Styles.icon }}
+                  onClick={() => handleStopCaptureClick()}
+                  className="bi bi-stop-circle-fill"
+                ></i>
+              ) : (
+                <i
+                  style={{ ...Styles.icon }}
+                  onClick={() => handleStartCaptureClick()}
+                  className="bi bi-record-circle-fill"
+                ></i>
+              )}
+            </div>
+          )}
           {recordedChunks.length > 0 && (
             <div className="col-md-12" style={{ ...Styles.saveContainer }}>
               <i
@@ -148,50 +141,119 @@ export default function App() {
   );
 }
 
-const Styles = {
-  mainContainer: {
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    textAlign: "center",
-    height: "100vh",
-    width: "100wv",
-    backgroundImage:
-      'url("https://raw.githubusercontent.com/CanaanGM/Cube/master/old_arcade_chars.jpg")',
-  },
-  recourderContainer: {
-    height: "650px",
-    width: "950px",
-    display: "flex",
-    flexDirection: "column",
-    backgroundColor: "rgb(29 1 0)",
-    margin: "auto",
-    border: "2px solid rgb(255 251 250)",
-    borderRadius: "12px",
-    padding: "10px",
-  },
-  playerContainer: {
-    padding: "0px",
-    margin: "0px",
-    borderRadius: "12px",
-    border: "2px solid rgb(255 251 250)",
-  },
-  icon: {
-    fontSize: "65px",
-    color: "rgb(255 251 250)",
-    padding: "0px",
-    margin: "0px",
-    cursor: "pointer",
-  },
-  saveContainer: {
-    display: "flex",
-    justifyContent: "end",
-  },
-  save: {
-    fontSize: "15px",
-    color: "rgb(255 251 250)",
-    padding: "0px",
-    margin: "0px",
-    cursor: "pointer",
-  },
-};
+const Styles =
+  window.innerWidth > 1000
+    ? {
+        mainContainer: {
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          textAlign: "center",
+          height: "100vh",
+          width: "100wv",
+          backgroundImage:
+            'url("https://raw.githubusercontent.com/CanaanGM/Cube/master/old_arcade_chars.jpg")',
+        },
+        recourderContainer: {
+          height: window.innerHeight - 20,
+          width: window.innerWidth - 600,
+          display: "flex",
+          flexDirection: "column",
+          backgroundColor: "rgb(29 1 0)",
+          margin: "auto",
+          border: "2px solid rgb(255 251 250)",
+          borderRadius: "12px",
+          padding: "10px",
+        },
+        playerContainer: {
+          padding: "0px",
+          margin: "0px",
+          borderRadius: "12px",
+          border: "2px solid rgb(255 251 250)",
+        },
+        noCamera: {
+          height: 500,
+          width: 665,
+          margin: "auto",
+          display: "flex",
+          flexDirection: "column",
+          textAlign: "center",
+          justifyContent: "center",
+          color: "rgb(255 251 250)",
+        },
+        icon: {
+          fontSize: "65px",
+          color: "rgb(255 251 250)",
+          padding: "0px",
+          margin: "0px",
+          cursor: "pointer",
+        },
+        saveContainer: {
+          display: "flex",
+          justifyContent: "end",
+        },
+        save: {
+          fontSize: "15px",
+          color: "rgb(255 251 250)",
+          padding: "0px",
+          margin: "0px",
+          cursor: "pointer",
+        },
+      }
+    : {
+        mainContainer: {
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          textAlign: "center",
+          height: "100vh",
+          width: "100wv",
+          backgroundImage:
+            'url("https://raw.githubusercontent.com/CanaanGM/Cube/master/old_arcade_chars.jpg")',
+        },
+        recourderContainer: {
+          height: 412,
+          width: 380,
+          display: "flex",
+          flexDirection: "column",
+          backgroundColor: "rgb(29 1 0)",
+          margin: "auto",
+          border: "2px solid rgb(255 251 250)",
+          borderRadius: "12px",
+          padding: "10px",
+        },
+        playerContainer: {
+          padding: "0px",
+          margin: "0px",
+          borderRadius: "12px",
+          border: "2px solid rgb(255 251 250)",
+        },
+        noCamera: {
+          height: 265,
+          width: 350,
+          margin: "auto",
+          display: "flex",
+          flexDirection: "column",
+          textAlign: "center",
+          justifyContent: "center",
+          color: "rgb(255 251 250)",
+        },
+        icon: {
+          fontSize: "65px",
+          color: "rgb(255 251 250)",
+          padding: "0px",
+          margin: "0px",
+          cursor: "pointer",
+        },
+        saveContainer: {
+          display: "flex",
+          justifyContent: "end",
+        },
+        save: {
+          fontSize: "15px",
+          color: "rgb(255 251 250)",
+          padding: "0px",
+          margin: "0px",
+          cursor: "pointer",
+        },
+      };
