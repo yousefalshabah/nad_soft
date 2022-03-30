@@ -15,20 +15,6 @@ export default function App() {
   const [recordedChunks, setRecordedChunks] = React.useState([]);
 
   React.useEffect(() => {
-    navigator.getMedia =
-      navigator.getUserMedia || // use the proper vendor prefix
-      navigator.webkitGetUserMedia ||
-      navigator.mozGetUserMedia ||
-      navigator.msGetUserMedia;
-    navigator.getMedia(
-      { video: true },
-      function () {
-        setHasCamera(true);
-      },
-      function () {
-        setHasCamera(false);
-      }
-    );
     // var device = "";
     const ua = navigator.userAgent;
     if (/(tablet|ipad|playbook|silk)|(android(?!.*mobi))/i.test(ua)) {
@@ -41,6 +27,20 @@ export default function App() {
       setDeviceType("mobile");
     } else {
       setDeviceType("desktop");
+      navigator.getMedia =
+        navigator.getUserMedia || // use the proper vendor prefix
+        navigator.webkitGetUserMedia ||
+        navigator.mozGetUserMedia ||
+        navigator.msGetUserMedia;
+      navigator.getMedia(
+        { video: true },
+        function () {
+          setHasCamera(true);
+        },
+        function () {
+          setHasCamera(false);
+        }
+      );
     }
   });
   const handleStartCaptureClick = React.useCallback(() => {
