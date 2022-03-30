@@ -123,7 +123,7 @@ export default function App() {
               </div>
             )}
           </div>
-          {hasCamera && (
+          {(hasCamera || deviceType) !== "desktop" && (
             <div className="col-md-12">
               {play ? (
                 <i
