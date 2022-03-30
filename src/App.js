@@ -13,17 +13,21 @@ export default function App() {
   const [recordedChunks, setRecordedChunks] = React.useState([]);
 
   const handleStartCaptureClick = React.useCallback(() => {
-    dispatch(start());
-    setCapturing(true);
-    mediaRecorderRef.current = new MediaRecorder(webcamRef.current.stream, {
-      mimeType: "video/webm",
-    });
+    console.log(webcamRef.current.stream);
+    if (webcamRef.current.stream) {
+      dispatch(start());
+      setCapturing(true);
 
-    mediaRecorderRef.current.addEventListener(
-      "dataavailable",
-      handleDataAvailable
-    );
-    mediaRecorderRef.current.start();
+      mediaRecorderRef.current = new MediaRecorder(webcamRef.current.stream, {
+        mimeType: "video/webm",
+      });
+
+      mediaRecorderRef.current.addEventListener(
+        "dataavailable",
+        handleDataAvailable
+      );
+      mediaRecorderRef.current.start();
+    }
   }, [webcamRef, setCapturing, mediaRecorderRef]);
 
   const handleDataAvailable = React.useCallback(
@@ -72,12 +76,19 @@ export default function App() {
       <div style={{ ...Styles.mainContainer }}>
         <div className="col-md-12" style={{ ...Styles.recourderContainer }}>
           <div className="col-md-12">
-            <Webcam
-              style={{ ...Styles.playerContainer }}
-              ref={webcamRef}
-              height={500}
-              width={800}
-            />
+            {webcamRef.current ? (
+              <Webcam
+                style={{ ...Styles.playerContainer }}
+                ref={webcamRef}
+                height={500}
+                width={800}
+              />
+            ) : (
+              <div style={{ ...Styles.playerContainer , height:500, width:800, margin:"auto",display:"flex", flexDirection:"column", textAlign:"center", justifyContent:"center", color:"rgb(255 251 250)"}}>
+                {" "}
+                <h1>device dosn`t have a camira</h1>
+              </div>
+            )}
           </div>
           <div className="col-md-12">
             {play ? (
