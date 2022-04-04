@@ -111,7 +111,7 @@ export default function App() {
             {hasCamera || deviceType !== "desktop" ? (
               <Webcam
                 style={{ ...Styles.playerContainer }}
-                audio={false}
+                audio={true}
                 ref={webcamRef}
                 height={window.innerWidth > 1000 ? 500 : 265}
                 width={window.innerWidth > 1000 ? 665 : 350}
