@@ -5,7 +5,7 @@ import Webcam from "react-webcam";
 import { start, stop, save } from "./redux/video";
 
 export default function App() {
-  const { play } = useSelector((state) => state.video);
+  const { play, videoUrl } = useSelector((state) => state.video);
   const dispatch = useDispatch();
   const webcamRef = React.useRef(null);
   const mediaRecorderRef = React.useRef(null);
@@ -93,12 +93,16 @@ export default function App() {
       document.body.appendChild(a);
       // a.style = "display: none";
       a.href = url;
-      a.download = "react-webcam-stream-capture.webm";
+      a.download = "arcade_vider_recorder.webm";
       a.click();
       window.URL.revokeObjectURL(url);
       setRecordedChunks([]);
     }
   }, [recordedChunks]);
+
+  const openVideoInNewTab = () => {
+    window.open(videoUrl, "_blank");
+  };
   return (
     <div className="App">
       <div style={{ ...Styles.mainContainer }}>
@@ -107,6 +111,7 @@ export default function App() {
             {hasCamera || deviceType !== "desktop" ? (
               <Webcam
                 style={{ ...Styles.playerContainer }}
+                audio={false}
                 ref={webcamRef}
                 height={window.innerWidth > 1000 ? 500 : 265}
                 width={window.innerWidth > 1000 ? 665 : 350}
@@ -141,12 +146,19 @@ export default function App() {
             </div>
           )}
           {recordedChunks.length > 0 && (
-            <div className="col-md-12" style={{ ...Styles.saveContainer }}>
-              <i
-                onClick={() => handleDownload()}
-                style={{ ...Styles.save }}
-                className="bi bi-save2-fill"
-              ></i>
+            <div style={{ display: "flex", justifyContent: "space-between" }}>
+              {videoUrl && (
+                <a href="" onClick={openVideoInNewTab}>
+                  watch before download
+                </a>
+              )}
+              <div style={{ ...Styles.saveContainer }}>
+                <i
+                  onClick={() => handleDownload()}
+                  style={{ ...Styles.save }}
+                  className="bi bi-save2-fill"
+                ></i>
+              </div>
             </div>
           )}
         </div>
