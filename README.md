@@ -3,7 +3,7 @@
 
 ## Description
 
-An old arcade game video player where you can record you own self and download the recorder video to view it your self 
+An old arcade game video player where you can record your own self and download the recorder video to view it  
 
 ## Getting Started
 
